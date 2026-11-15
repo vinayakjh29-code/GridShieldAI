@@ -1,0 +1,11 @@
+packet_count,traffic_volume,connection_rate,port_number,label
+10,500,2,80,Normal
+15,700,3,443,Normal
+12,600,2,80,Normal
+20,900,4,443,Normal
+1000,50000,500,80,DoS
+1200,60000,600,80,DoS
+800,45000,400,443,DoS
+50,2000,10,9999,Unauthorized
+60,2500,12,8888,Unauthorized
+70,3000,15,7777,Unauthorized
