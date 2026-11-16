@@ -15,235 +15,248 @@ from datetime import datetime
 # =====================================================
 
 st.set_page_config(
-    page_title="GridShield AI",
+    page_title="GridShield AI | Smart Grid Digital Twin",
     page_icon="🛡️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # =====================================================
-# PROFESSIONAL DARK THEME
+# MODERN COMMAND CENTER THEME & MOTION STYLES
 # =====================================================
 
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 .stApp {
-    background: #081426;
-    color: #F1F5F9;
-}
-[data-testid="stSidebar"] {
-    background: #0D1B2E;
-}
-[data-testid="stSidebar"] * {
-    color: #F1F5F9;
+    background: radial-gradient(circle at 18% 8%, #0E2442 0%, #060E1C 50%, #030711 100%);
+    color: #F8FAFC;
 }
 
-/* Metric cards */
+header[data-testid="stHeader"] {
+    background: rgba(6, 14, 28, 0.78) !important;
+    backdrop-filter: blur(12px);
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #091528 0%, #040A14 100%) !important;
+    border-right: 1px solid rgba(56, 189, 248, 0.18);
+}
+section[data-testid="stSidebar"] * {
+    color: #F1F5F9 !important;
+}
+
+/* Animated Hero Banner */
+@keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { box-shadow: 0 0 0 9px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.hero-banner {
+    background: linear-gradient(135deg, rgba(15, 36, 66, 0.88) 0%, rgba(8, 18, 36, 0.94) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    border-radius: 18px;
+    padding: 20px 26px;
+    margin-bottom: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(14px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.hero-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #FFFFFF 0%, #38BDF8 55%, #34D399 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+.hero-sub {
+    color: #94A3B8;
+    font-size: 13.5px;
+    margin: 4px 0 0 0;
+    font-weight: 500;
+}
+.live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: rgba(16, 185, 129, 0.14);
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    color: #34D399;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+}
+.pulse-dot {
+    width: 9px;
+    height: 9px;
+    background: #10B981;
+    border-radius: 50%;
+    animation: pulseRing 1.8s infinite;
+}
+
+/* 3-Step Concept Strip for Instant Judge Clarity */
+.concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.concept-card {
+    background: rgba(13, 27, 50, 0.72);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 13px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.concept-icon {
+    font-size: 22px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.concept-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #38BDF8;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+.concept-desc {
+    font-size: 12px;
+    color: #CBD5E1;
+    margin-top: 2px;
+}
+
+/* Section Labels */
+.section-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #38BDF8;
+    margin: 18px 0 10px 0;
+}
+
+/* Glassmorphic Metric Cards */
 [data-testid="stMetric"] {
-    background: #10243D;
-    border: 1px solid #234568;
-    padding: 18px;
-    border-radius: 12px;
+    background: rgba(14, 29, 54, 0.72) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+    border-radius: 14px !important;
+    padding: 14px 16px !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
-[data-testid="stMetricValue"] { color: #38BDF8 !important; }
-[data-testid="stMetricLabel"] { color: #CBD5E1 !important; }
-
-/* Alerts: force readable text on dark backgrounds */
-[data-testid="stAlert"] {
-    background: #142B46 !important;
-    border: 1px solid #315779 !important;
+[data-testid="stMetric"]:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56, 189, 248, 0.5) !important;
+}
+[data-testid="stMetricLabel"] {
+    color: #94A3B8 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+[data-testid="stMetricValue"] {
+    font-family: 'JetBrains Mono', monospace !important;
     color: #F8FAFC !important;
-}
-[data-testid="stAlert"] *,
-[data-testid="stAlert"] p,
-[data-testid="stAlert"] div,
-[data-testid="stAlert"] span {
-    color: #F8FAFC !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
 }
 
-/* Distinct readable status colours */
-[data-testid="stAlert"][kind="success"] {
-    background: #103B32 !important;
-    border-color: #00A86B !important;
-}
-[data-testid="stAlert"][kind="error"] {
-    background: #421F2B !important;
-    border-color: #FF4057 !important;
-}
-[data-testid="stAlert"][kind="warning"] {
-    background: #44351B !important;
-    border-color: #FFB020 !important;
-}
-
-/* Sidebar info message */
-[data-testid="stSidebar"] [data-testid="stAlert"] {
-    background: #173453 !important;
-    border: 1px solid #3974A5 !important;
-}
-
-/* Select boxes and number inputs */
-[data-baseweb="select"] > div,
-[data-testid="stSelectbox"] [data-baseweb="select"] > div,
-[data-testid="stNumberInput"] input {
-    background: #173453 !important;
-    border: 1px solid #3974A5 !important;
-    color: #F8FAFC !important;
-    -webkit-text-fill-color: #F8FAFC !important;
-}
-[data-baseweb="select"] *,
-[data-testid="stSelectbox"] input {
-    color: #F8FAFC !important;
-    -webkit-text-fill-color: #F8FAFC !important;
-}
-[role="listbox"], [role="option"] {
-    background: #173453 !important;
-    color: #F8FAFC !important;
-}
-[role="option"]:hover {
-    background: #24527A !important;
-}
-
-/* Buttons */
-.stButton > button, .stDownloadButton > button {
-    background: #1267C5 !important;
-    color: #FFFFFF !important;
-    border: 1px solid #2994FF !important;
-    border-radius: 9px;
-    font-weight: 600 !important;
-}
-.stButton > button:hover, .stDownloadButton > button:hover {
-    background: #168BFF !important;
-    color: #FFFFFF !important;
-    border-color: #64B5FF !important;
-}
-
-/* General text */
-h1, h2, h3, h4, p, label, [data-testid="stMarkdownContainer"] {
-    color: #F1F5F9;
-}
-.stCaption, [data-testid="stCaption"] {
-    color: #AFC3D8 !important;
-}
-
-/* High-specificity Streamlit alert overrides */
+/* Status Alerts */
 div[data-testid="stAlert"],
-div[data-testid="stAlert"] > div,
-div[data-testid="stAlert"] [data-testid="stMarkdownContainer"] {
-    background: #142B46 !important;
-    color: #FFFFFF !important;
-    border-color: #315779 !important;
+div[data-testid="stAlert"] > div {
+    border-radius: 12px !important;
+    border-width: 1px !important;
+    font-weight: 600 !important;
 }
 div[data-testid="stAlert"] *,
 div[data-testid="stAlert"] p,
-div[data-testid="stAlert"] span,
-div[data-testid="stAlert"] div,
-div[data-testid="stAlert"] [data-testid="stMarkdownContainer"] * {
-    color: #FFFFFF !important;
-    -webkit-text-fill-color: #FFFFFF !important;
-    opacity: 1 !important;
+div[data-testid="stAlert"] span {
+    color: #F8FAFC !important;
+    -webkit-text-fill-color: #F8FAFC !important;
 }
-
-/* Sidebar information box */
-section[data-testid="stSidebar"] div[data-testid="stAlert"],
-section[data-testid="stSidebar"] div[data-testid="stAlert"] > div {
-    background: #173453 !important;
-    border: 1px solid #3974A5 !important;
-}
-
-/* Native Streamlit status message variants */
 div[data-testid="stAlert"][kind="success"],
 div[data-testid="stAlert"][kind="success"] > div {
-    background: #103B32 !important;
-    border-color: #00A86B !important;
+    background: rgba(6, 78, 59, 0.6) !important;
+    border-color: rgba(16, 185, 129, 0.55) !important;
 }
 div[data-testid="stAlert"][kind="error"],
 div[data-testid="stAlert"][kind="error"] > div {
-    background: #421F2B !important;
-    border-color: #FF4057 !important;
+    background: rgba(127, 29, 29, 0.62) !important;
+    border-color: rgba(244, 63, 94, 0.6) !important;
 }
 div[data-testid="stAlert"][kind="warning"],
 div[data-testid="stAlert"][kind="warning"] > div {
-    background: #44351B !important;
-    border-color: #FFB020 !important;
+    background: rgba(120, 53, 15, 0.6) !important;
+    border-color: rgba(245, 158, 11, 0.55) !important;
 }
 
-/* Keep selectbox labels and selected values readable */
-div[data-testid="stSelectbox"] label,
-div[data-testid="stSelectbox"] [data-baseweb="select"] *,
-section[data-testid="stSidebar"] label {
-    color: #F8FAFC !important;
-    -webkit-text-fill-color: #F8FAFC !important;
-}
-
-/* GRID CONTROL sidebar styling */
-section[data-testid="stSidebar"] {
-    background: #0B1B30 !important;
-}
-section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h1,
-section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2,
-section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h3,
-section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] span {
-    color: #F8FAFC !important;
-    -webkit-text-fill-color: #F8FAFC !important;
-}
-
-section[data-testid="stSidebar"] [data-testid="stToggle"] [role="switch"] {
-    background: #31506E !important;
-    border: 1px solid #6B8BAA !important;
-}
-section[data-testid="stSidebar"] [data-testid="stToggle"] [role="switch"][aria-checked="true"] {
-    background: #0284C7 !important;
-    border-color: #38BDF8 !important;
-}
-
-section[data-testid="stSidebar"] .stButton > button {
-    width: 100% !important;
-    background: linear-gradient(135deg, #0878D1, #0756A5) !important;
-    color: #FFFFFF !important;
-    border: 1px solid #38BDF8 !important;
+/* Inputs & Dropdowns */
+[data-baseweb="select"] > div,
+[data-testid="stSelectbox"] [data-baseweb="select"] > div,
+[data-testid="stNumberInput"] input {
+    background: rgba(15, 31, 56, 0.9) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
     border-radius: 10px !important;
-    font-weight: 700 !important;
-    min-height: 42px !important;
-}
-section[data-testid="stSidebar"] .stButton > button:hover {
-    background: #0891B2 !important;
-    border-color: #67E8F9 !important;
-}
-
-section[data-testid="stSidebar"] div[data-testid="stSelectbox"] [data-baseweb="select"],
-section[data-testid="stSidebar"] div[data-testid="stSelectbox"] [data-baseweb="select"] > div,
-section[data-testid="stSidebar"] div[data-testid="stSelectbox"] [role="combobox"],
-section[data-testid="stSidebar"] div[data-testid="stSelectbox"] [role="combobox"] > div {
-    background: #173453 !important;
-    background-color: #173453 !important;
     color: #F8FAFC !important;
     -webkit-text-fill-color: #F8FAFC !important;
-    border-color: #38BDF8 !important;
-}
-section[data-testid="stSidebar"] div[data-testid="stSelectbox"] [data-baseweb="select"] * {
-    background-color: transparent !important;
-    color: #F8FAFC !important;
-    -webkit-text-fill-color: #F8FAFC !important;
-}
-section[data-testid="stSidebar"] div[data-testid="stSelectbox"] [data-baseweb="select"] > div {
-    border: 1px solid #38BDF8 !important;
-    border-radius: 9px !important;
-}
-section[data-testid="stSidebar"] div[data-testid="stSelectbox"] [data-baseweb="select"] svg {
-    color: #38BDF8 !important;
-    fill: #38BDF8 !important;
 }
 div[data-baseweb="popover"] ul,
 div[data-baseweb="popover"] li,
 div[data-baseweb="popover"] [role="option"] {
-    background-color: #173453 !important;
-    color: #FFFFFF !important;
-    -webkit-text-fill-color: #FFFFFF !important;
+    background-color: #0F1F38 !important;
+    color: #F8FAFC !important;
+    -webkit-text-fill-color: #F8FAFC !important;
 }
 div[data-baseweb="popover"] li:hover,
 div[data-baseweb="popover"] [role="option"]:hover {
-    background-color: #24527A !important;
+    background-color: #1E3A5F !important;
+}
+
+/* Buttons */
+.stButton > button, .stDownloadButton > button {
+    background: linear-gradient(135deg, #0284C7 0%, #2563EB 100%) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(125, 211, 252, 0.4) !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.32);
+    transition: all 0.2s ease;
+}
+.stButton > button:hover, .stDownloadButton > button:hover {
+    background: linear-gradient(135deg, #0EA5E9 0%, #3B82F6 100%) !important;
+    transform: translateY(-1px);
+}
+section[data-testid="stSidebar"] .stButton > button {
+    width: 100% !important;
+}
+section[data-testid="stSidebar"] [data-testid="stToggle"] [role="switch"][aria-checked="true"] {
+    background: #0EA5E9 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -322,7 +335,6 @@ ANOMALY_EXPLANATIONS = {
 
 
 def predict_electrical_condition(reading):
-    """Run trained Random Forest Electrical AI on the 6 telemetry features."""
     if electrical_model is None:
         return "MODEL_UNAVAILABLE", 0.0, "Electrical AI model file not found."
 
@@ -353,7 +365,6 @@ def predict_electrical_condition(reading):
 # =====================================================
 
 def generate_reading(scenario):
-
     voltage = random.uniform(10.9, 11.1)
     current = random.uniform(260, 310)
     frequency = random.uniform(49.95, 50.05)
@@ -384,10 +395,7 @@ def generate_reading(scenario):
     elif scenario == "SWITCHING ANOMALY":
         switching = True
 
-    power = round(
-        voltage * current * math.sqrt(3) / 1000,
-        2
-    )
+    power = round(voltage * current * math.sqrt(3) / 1000, 2)
 
     reading = {
         "time": datetime.now().strftime("%H:%M:%S"),
@@ -421,54 +429,199 @@ def generate_reading(scenario):
     reading["rule_alerts"] = rule_alerts
     reading["abnormal"] = is_abnormal
     reading["alerts"] = combined_alerts
-    reading["breaker_status"] = (
-        "OPEN - ISOLATED" if is_abnormal else "CLOSED"
-    )
+    reading["breaker_status"] = "OPEN - ISOLATED" if is_abnormal else "CLOSED"
 
     return reading
 
 
-# =====================================================
-# RULE-BASED ELECTRICAL ANOMALY CHECKS
-# =====================================================
-
 def detect_anomaly(data):
-
     alerts = []
-
     if data["load_percent"] > 100:
         alerts.append("OVERLOAD DETECTED")
-
     if data["voltage_kv"] < 10:
         alerts.append("VOLTAGE ABNORMALITY")
-
     if not 49.5 <= data["frequency_hz"] <= 50.5:
         alerts.append("FREQUENCY DEVIATION")
-
     if data["transformer_temp_c"] > 85:
         alerts.append("TRANSFORMER OVERHEATING")
-
     if data["communication_status"] != "CONNECTED":
         alerts.append("COMMUNICATION ANOMALY")
-
     if data["switching_event"]:
         alerts.append("ABNORMAL SWITCHING")
-
     return alerts
 
 
 # =====================================================
-# ANIMATED GAUGE
+# LIVE ANIMATED ELECTRICITY FLOW TOPOLOGY (SVG MOTION)
 # =====================================================
 
-def render_gauge(title, value, maximum, unit, minimum=0):
-    """Render a responsive, animated SVG gauge with value-based status colours."""
+def render_animated_topology(abnormal, power_mw, load_pct):
+    """Animated SVG power grid flow diagram showing moving electricity pulses and breaker state."""
+    if abnormal:
+        flow_color = "#F43F5E"
+        status_text = "FAULT ISOLATED • BREAKER OPEN"
+        pulse_speed = "0s"
+        pulse_opacity = "0"
+        breaker_angle = "-38"
+        sub_glow = "rgba(244, 63, 94, 0.35)"
+    else:
+        flow_color = "#10B981"
+        status_text = f"ENERGIZED • {power_mw:.2f} MW FLOWING ({load_pct:.0f}% LOAD)"
+        pulse_speed = "1.6s"
+        pulse_opacity = "1"
+        breaker_angle = "0"
+        sub_glow = "rgba(16, 185, 129, 0.28)"
+
+    html_topo = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+        body {{ background: transparent; font-family: 'Inter', sans-serif; color: #F8FAFC; }}
+        .topo-box {{
+            background: linear-gradient(145deg, rgba(13, 27, 50, 0.82), rgba(7, 15, 30, 0.92));
+            border: 1px solid rgba(56, 189, 248, 0.22);
+            border-radius: 16px;
+            padding: 14px 18px 10px;
+            box-shadow: 0 8px 26px rgba(0,0,0,0.3);
+        }}
+        .topo-header {{
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 6px; flex-wrap: wrap; gap: 8px;
+        }}
+        .topo-title {{ font-size: 12px; font-weight: 700; color: #38BDF8; letter-spacing: 1px; }}
+        .topo-badge {{
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; font-weight: 700;
+            color: {flow_color};
+            background: {sub_glow};
+            border: 1px solid {flow_color}66;
+            padding: 4px 12px; border-radius: 999px;
+        }}
+        svg {{ width: 100%; height: 145px; display: block; }}
+        .grid-line {{
+            stroke: {flow_color};
+            stroke-width: 4;
+            stroke-opacity: 0.35;
+        }}
+        .energy-pulse {{
+            stroke: #38BDF8;
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-dasharray: 18 42;
+            opacity: {pulse_opacity};
+            animation: flowMove {pulse_speed} linear infinite;
+            filter: drop-shadow(0 0 6px #38BDF8);
+        }}
+        @keyframes flowMove {{
+            from {{ stroke-dashoffset: 120; }}
+            to {{ stroke-dashoffset: 0; }}
+        }}
+        .node-circle {{
+            fill: #0B172E;
+            stroke: {flow_color};
+            stroke-width: 3.5;
+            filter: drop-shadow(0 0 8px {sub_glow});
+        }}
+        .node-label {{
+            fill: #E2E8F0;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }}
+        .node-sub {{
+            fill: #94A3B8;
+            font-size: 9.5px;
+        }}
+    </style>
+    </head>
+    <body>
+      <div class="topo-box">
+        <div class="topo-header">
+            <div class="topo-title">⚡ LIVE SMART GRID POWER FLOW &amp; BREAKER DIGITAL TWIN</div>
+            <div class="topo-badge">● {status_text}</div>
+        </div>
+        <svg viewBox="0 0 920 145">
+          <!-- Transmission Lines -->
+          <line class="grid-line" x1="100" y1="60" x2="290" y2="60"/>
+          <line class="energy-pulse" x1="100" y1="60" x2="290" y2="60"/>
+
+          <line class="grid-line" x1="290" y1="60" x2="460" y2="60"/>
+          <line class="energy-pulse" x1="290" y1="60" x2="460" y2="60"/>
+
+          <!-- Circuit Breaker Gap between AI Substation (460) and Distribution (650) -->
+          <line class="grid-line" x1="460" y1="60" x2="530" y2="60"/>
+          <line x1="530" y1="60" x2="585" y2="60" stroke="{flow_color}" stroke-width="5"
+                stroke-linecap="round" transform="rotate({breaker_angle} 530 60)"/>
+          <text x="557" y="34" text-anchor="middle" fill="{flow_color}" font-size="10" font-weight="700">
+            {"BREAKER OPEN" if abnormal else "BREAKER CLOSED"}
+          </text>
+          <line class="grid-line" x1="585" y1="60" x2="660" y2="60"/>
+          <line class="energy-pulse" x1="585" y1="60" x2="660" y2="60"/>
+
+          <line class="grid-line" x1="660" y1="60" x2="830" y2="60"/>
+          <line class="energy-pulse" x1="660" y1="60" x2="830" y2="60"/>
+
+          <!-- Nodes -->
+          <g transform="translate(100,60)">
+            <circle class="node-circle" r="24"/>
+            <text y="5" text-anchor="middle" font-size="16">🏭</text>
+            <text y="44" text-anchor="middle" class="node-label">POWER PLANT</text>
+            <text y="58" text-anchor="middle" class="node-sub">11 kV Gen</text>
+          </g>
+
+          <g transform="translate(290,60)">
+            <circle class="node-circle" r="24"/>
+            <text y="5" text-anchor="middle" font-size="16">🗼</text>
+            <text y="44" text-anchor="middle" class="node-label">TRANSMISSION</text>
+            <text y="58" text-anchor="middle" class="node-sub">HV Bus</text>
+          </g>
+
+          <g transform="translate(460,60)">
+            <circle class="node-circle" r="26"/>
+            <text y="5" text-anchor="middle" font-size="17">🤖</text>
+            <text y="44" text-anchor="middle" class="node-label">AI SUBSTATION</text>
+            <text y="58" text-anchor="middle" class="node-sub">Dual-AI Guard</text>
+          </g>
+
+          <g transform="translate(660,60)">
+            <circle class="node-circle" r="24"/>
+            <text y="5" text-anchor="middle" font-size="16">🔌</text>
+            <text y="44" text-anchor="middle" class="node-label">DISTRIBUTION</text>
+            <text y="58" text-anchor="middle" class="node-sub">Feeder Line</text>
+          </g>
+
+          <g transform="translate(830,60)">
+            <circle class="node-circle" r="24"/>
+            <text y="5" text-anchor="middle" font-size="16">🏙️</text>
+            <text y="44" text-anchor="middle" class="node-label">CONSUMERS</text>
+            <text y="58" text-anchor="middle" class="node-sub">Smart Load</text>
+          </g>
+        </svg>
+      </div>
+    </body>
+    </html>
+    """
+    components.html(html_topo, height=198, scrolling=False)
+
+
+# =====================================================
+# SMOOTH-MOTION ANIMATED METER GAUGE (PREV -> CURR)
+# =====================================================
+
+def render_gauge(title, value, prev_value, maximum, unit, safe_hint, minimum=0):
+    """Animated SVG meter whose needle smoothly glides from prev_value to current value."""
 
     value = float(value)
+    prev_value = float(prev_value)
     minimum = float(minimum)
     maximum = float(maximum)
     span = max(maximum - minimum, 1e-9)
+
     ratio = max(0.0, min(1.0, (value - minimum) / span))
+    prev_ratio = max(0.0, min(1.0, (prev_value - minimum) / span))
 
     limits = {
         "VOLTAGE": (10.0, 10.5, 11.5, 11.8),
@@ -484,184 +637,163 @@ def render_gauge(title, value, maximum, unit, minimum=0):
     )
 
     if value < critical_low or value >= critical_high:
-        status, colour = "CRITICAL", "#FF4057"
+        status, colour, bg_pill = "CRITICAL", "#F43F5E", "rgba(244, 63, 94, 0.16)"
     elif value < warning_low or value >= warning_high:
-        status, colour = "WARNING", "#FFB020"
+        status, colour, bg_pill = "WARNING", "#F59E0B", "rgba(245, 158, 11, 0.16)"
     else:
-        status, colour = "NORMAL", "#00E676"
+        status, colour, bg_pill = "NORMAL", "#10B981", "rgba(16, 185, 129, 0.16)"
 
     html_code = """
     <!DOCTYPE html>
     <html>
     <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         body {
             margin: 0; padding: 0;
             background: transparent;
             color: #F8FAFC;
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         .card {
-            background: linear-gradient(145deg, #102A49, #0B1D34);
-            border: 1px solid #285078;
+            background: linear-gradient(160deg, rgba(16, 33, 60, 0.82), rgba(8, 17, 34, 0.92));
+            border: 1px solid rgba(56, 189, 248, 0.22);
             border-radius: 16px;
             padding: 12px 10px 10px;
             text-align: center;
-            min-height: 224px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+            min-height: 234px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
         }
         .heading {
-            font-size: 15px; font-weight: 700;
-            color: #F8FAFC; margin: 4px 0 0;
-            letter-spacing: .5px;
+            font-size: 12px; font-weight: 700;
+            color: #E2E8F0; margin: 2px 0 0;
+            letter-spacing: 0.9px;
+            text-transform: uppercase;
         }
-        svg { width: 100%; max-width: 270px; display: block; margin: 0 auto; }
-        .track { fill: none; stroke: #263F5D; stroke-width: 14; }
+        .hint {
+            font-size: 10px; color: #64748B;
+            margin-top: 2px; font-weight: 600;
+        }
+        svg { width: 100%; max-width: 255px; display: block; margin: 0 auto; }
+        .track { fill: none; stroke: rgba(148, 163, 184, 0.16); stroke-width: 13; stroke-linecap: round; }
         .arc {
-            fill: none; stroke: __COLOUR__; stroke-width: 14;
+            fill: none; stroke: __COLOUR__; stroke-width: 13;
             stroke-linecap: round; stroke-dasharray: 377;
-            stroke-dashoffset: 377;
-            filter: drop-shadow(0 0 5px __COLOUR__);
-            transition: stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1);
+            stroke-dashoffset: __START_OFFSET__;
+            filter: drop-shadow(0 0 8px __COLOUR__);
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .needle {
-            stroke: #EAF6FF; stroke-width: 4; stroke-linecap: round;
+            stroke: #F8FAFC; stroke-width: 3.5; stroke-linecap: round;
             transform-origin: 150px 150px;
-            transition: transform 1.1s cubic-bezier(.2,.8,.2,1);
+            transform: rotate(__START_ANGLE__deg);
+            transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .reading { font-size: 25px; fill: #FFFFFF; font-weight: 700; }
-        .small { fill: #AFC3D8; font-size: 11px; }
+        .reading { font-family: 'JetBrains Mono', monospace; font-size: 23px; fill: #FFFFFF; font-weight: 700; }
+        .small { fill: #64748B; font-size: 10px; font-weight: 600; }
         .status {
-            display: inline-block; margin-top: -3px; padding: 5px 15px;
-            border-radius: 20px; color: __COLOUR__;
-            background: __STATUS_BG__; font-size: 11px; font-weight: 700;
-            letter-spacing: .7px;
+            display: inline-block; margin-top: 2px; padding: 4px 13px;
+            border-radius: 999px; color: __COLOUR__;
+            border: 1px solid __COLOUR__55;
+            background: __STATUS_BG__; font-size: 10.5px; font-weight: 700;
+            letter-spacing: 0.8px;
         }
     </style>
     </head>
     <body>
       <div class="card">
         <div class="heading">__TITLE__</div>
-        <svg viewBox="0 0 300 190" role="img" aria-label="__TITLE__ gauge">
+        <div class="hint">Nominal: __SAFE_HINT__</div>
+        <svg viewBox="0 0 300 186" role="img" aria-label="__TITLE__ gauge">
           <path class="track" d="M 30 150 A 120 120 0 0 1 270 150"/>
           <path class="arc" id="arc" d="M 30 150 A 120 120 0 0 1 270 150"/>
-          <line class="needle" id="needle" x1="150" y1="150" x2="150" y2="52"/>
-          <circle cx="150" cy="150" r="7" fill="#EAF6FF"/>
-          <text x="150" y="181" text-anchor="middle" class="reading">__VALUE__</text>
-          <text x="29" y="166" class="small">MIN</text>
-          <text x="255" y="166" class="small">MAX</text>
+          <line class="needle" id="needle" x1="150" y1="150" x2="150" y2="54"/>
+          <circle cx="150" cy="150" r="7" fill="#38BDF8"/>
+          <text x="150" y="180" text-anchor="middle" class="reading">__VALUE__</text>
+          <text x="26" y="168" class="small">MIN</text>
+          <text x="252" y="168" class="small">MAX</text>
         </svg>
         <div class="status">● __STATUS__</div>
       </div>
       <script>
-        const ratio = __RATIO__;
-        const angle = -90 + ratio * 180;
-        document.getElementById("needle").style.transform = "rotate(" + angle + "deg)";
-        requestAnimationFrame(() => {
-          document.getElementById("arc").style.strokeDashoffset = 377 * (1 - ratio);
-        });
+        const targetAngle = -90 + (__RATIO__ * 180);
+        const targetOffset = 377 * (1 - __RATIO__);
+        setTimeout(() => {
+          document.getElementById("needle").style.transform = "rotate(" + targetAngle + "deg)";
+          document.getElementById("arc").style.strokeDashoffset = targetOffset;
+        }, 60);
       </script>
     </body>
     </html>
     """
 
+    start_angle = -90 + (prev_ratio * 180)
+    start_offset = 377 * (1 - prev_ratio)
+
     replacements = {
         "__TITLE__": title,
+        "__SAFE_HINT__": safe_hint,
         "__VALUE__": f"{value:.2f} {unit}",
         "__RATIO__": json.dumps(ratio),
+        "__START_ANGLE__": json.dumps(start_angle),
+        "__START_OFFSET__": json.dumps(start_offset),
         "__COLOUR__": colour,
         "__STATUS__": status,
-        "__STATUS_BG__": "rgba(0,230,118,.13)" if status == "NORMAL"
-            else ("rgba(255,176,32,.14)" if status == "WARNING" else "rgba(255,64,87,.14)"),
+        "__STATUS_BG__": bg_pill,
     }
     for key, replacement in replacements.items():
         html_code = html_code.replace(key, replacement)
 
-    components.html(html_code, height=245, scrolling=False)
+    components.html(html_code, height=248, scrolling=False)
 
 
 # =====================================================
-# SMART GRID TOPOLOGY
+# HEADER & 3-STEP CONCEPT CLARITY STRIP
 # =====================================================
 
-def create_topology(abnormal):
+st.markdown("""
+<div class="hero-banner">
+    <div>
+        <h1 class="hero-title">🛡️ GRIDSHIELD AI</h1>
+        <p class="hero-sub">Real-Time Smart Grid Digital Twin • Dual-AI Physical &amp; Cybersecurity Protection</p>
+    </div>
+    <div class="live-pill">
+        <span class="pulse-dot"></span> LIVE DIGITAL TWIN ACTIVE
+    </div>
+</div>
 
-    color = "#EF4444" if abnormal else "#22C55E"
-
-    positions = [0, 2, 4, 6, 8]
-
-    names = [
-        "POWER PLANT",
-        "TRANSMISSION",
-        "SUBSTATION",
-        "DISTRIBUTION",
-        "CONSUMERS"
-    ]
-
-    fig = go.Figure()
-
-    for i in range(4):
-        fig.add_trace(go.Scatter(
-            x=[positions[i], positions[i+1]],
-            y=[0, 0],
-            mode="lines",
-            line=dict(color=color, width=6),
-            showlegend=False
-        ))
-
-    fig.add_trace(go.Scatter(
-        x=positions,
-        y=[0] * 5,
-        mode="markers+text",
-        text=names,
-        textposition="bottom center",
-        marker=dict(
-            size=23,
-            color=color,
-            line=dict(color="white", width=1)
-        ),
-        textfont=dict(color="white", size=11),
-        showlegend=False
-    ))
-
-    fig.update_layout(
-        title="⚡ SMART GRID ELECTRICITY FLOW",
-        paper_bgcolor="#081426",
-        plot_bgcolor="#081426",
-        font=dict(color="white"),
-        height=230,
-        xaxis=dict(visible=False),
-        yaxis=dict(visible=False),
-        margin=dict(t=45, b=50, l=15, r=15)
-    )
-
-    return fig
-
-
-# =====================================================
-# HEADER
-# =====================================================
-
-st.title("🛡️ GRIDSHIELD AI")
-
-st.subheader(
-    "Intelligent Smart Grid Digital Twin & Dual-AI Security Monitoring"
-)
-
-st.caption(
-    "ACADEMIC PROTOTYPE | ALL ELECTRICAL VALUES & PROTECTION ACTIONS ARE SIMULATED"
-)
-
-st.divider()
+<div class="concept-grid">
+    <div class="concept-card">
+        <div class="concept-icon">⚡</div>
+        <div>
+            <div class="concept-title">1. Physical Grid Sensors</div>
+            <div class="concept-desc">Monitors Voltage, Current, Frequency, Load &amp; Temp in real time.</div>
+        </div>
+    </div>
+    <div class="concept-card">
+        <div class="concept-icon">🧠</div>
+        <div>
+            <div class="concept-title">2. Dual-AI Threat Brain</div>
+            <div class="concept-desc">2 Random Forest AIs detect electrical faults &amp; cyber-attacks simultaneously.</div>
+        </div>
+    </div>
+    <div class="concept-card">
+        <div class="concept-icon">🛡️</div>
+        <div>
+            <div class="concept-title">3. Auto-Breaker Isolation</div>
+            <div class="concept-desc">Trips relay &amp; isolates substation instantly to prevent blackouts.</div>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # =====================================================
 # SIDEBAR CONTROLS
 # =====================================================
 
-st.sidebar.title("⚙️ GRID CONTROL")
+st.sidebar.markdown("## ⚙️ GRID CONTROL PANEL")
 
 st.session_state.running = st.sidebar.toggle(
     "Start Grid Simulation",
@@ -679,12 +811,12 @@ scenarios = [
 ]
 
 st.session_state.scenario = st.sidebar.selectbox(
-    "Select Grid Scenario",
+    "Inject Grid Fault Scenario",
     scenarios,
     index=scenarios.index(st.session_state.scenario)
 )
 
-# AI System Status in Sidebar
+st.sidebar.markdown("---")
 st.sidebar.markdown("### 🧠 AI ENGINE STATUS")
 if electrical_model is not None:
     st.sidebar.success("Electrical AI: ACTIVE")
@@ -697,338 +829,8 @@ else:
     st.sidebar.warning("Network Security AI: NOT LOADED")
 
 st.sidebar.info(
-    "Simulation only. No real electrical equipment is controlled."
+    "Academic Prototype • All electrical values & breaker trips are simulated."
 )
 
 if st.sidebar.button("🔄 RESET GRID"):
-
-    st.session_state.history = []
-    st.session_state.events = []
-    st.session_state.total_analyses = 0
-    st.session_state.normal_count = 0
-    st.session_state.abnormal_count = 0
-    st.session_state.last_network_status = "Normal"
-
-    st.rerun()
-
-
-# =====================================================
-# LIVE DASHBOARD (4s CLOUD-OPTIMIZED INTERVAL)
-# =====================================================
-
-@st.fragment(run_every="4s")
-def live_dashboard():
-
-    if st.session_state.running:
-
-        reading = generate_reading(
-            st.session_state.scenario
-        )
-
-        st.session_state.history.append(reading)
-        st.session_state.history = (
-            st.session_state.history[-40:]
-        )
-
-        st.session_state.total_analyses += 1
-
-        if reading["abnormal"]:
-
-            st.session_state.abnormal_count += 1
-
-            st.session_state.events.append({
-                "Time": reading["time"],
-                "AI Prediction": reading["ai_condition"],
-                "Confidence": f'{reading["ai_confidence"]:.1f}%',
-                "Event": ", ".join(reading["alerts"]),
-                "Status": "SIMULATED PROTECTION ACTIVATED"
-            })
-
-        else:
-            st.session_state.normal_count += 1
-
-        st.session_state.events = (
-            st.session_state.events[-30:]
-        )
-
-    if not st.session_state.history:
-
-        st.info("Start simulation to generate telemetry.")
-        return
-
-    latest = st.session_state.history[-1]
-    abnormal = latest["abnormal"]
-    cyber_threat_active = st.session_state.last_network_status != "Normal"
-
-    # DUAL-AI COORDINATED THREAT CORRELATION ALERT
-
-    if abnormal and cyber_threat_active:
-        st.error(
-            f"🚨 CRITICAL: COORDINATED CYBER-PHYSICAL THREAT SUSPECTED! "
-            f"Electrical Fault ({latest['ai_condition']}) + Cyber Threat ({st.session_state.last_network_status}) detected simultaneously."
-        )
-    elif abnormal:
-        st.error(
-            "🚨 ABNORMAL GRID CONDITION: "
-            + ", ".join(latest["alerts"])
-        )
-    elif cyber_threat_active:
-        st.warning(
-            f"⚠️ ELECTRICAL GRID NOMINAL, BUT CYBER THREAT ACTIVE ({st.session_state.last_network_status}) IN NETWORK LAYER"
-        )
-    else:
-        st.success("🟢 NORMAL GRID OPERATION — PHYSICAL & CYBER LAYERS NOMINAL")
-
-    # TOPOLOGY
-
-    st.plotly_chart(
-        create_topology(abnormal),
-        use_container_width=True,
-        key="grid_topology"
-    )
-
-    # ELECTRICAL TELEMETRY
-
-    st.subheader("📊 LIVE ELECTRICAL TELEMETRY")
-
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Voltage", f'{latest["voltage_kv"]} kV')
-    c2.metric("Current", f'{latest["current_a"]} A')
-    c3.metric("Frequency", f'{latest["frequency_hz"]} Hz')
-
-    c4, c5, c6 = st.columns(3)
-    c4.metric("Power", f'{latest["power_mw"]} MW')
-    c5.metric("Grid Load", f'{latest["load_percent"]} %')
-    c6.metric("Transformer Temperature", f'{latest["transformer_temp_c"]} °C')
-
-    # GAUGES
-
-    st.subheader("🎯 LIVE ELECTRICAL GAUGES")
-    st.caption("Simulated readings • Gauge colours change automatically with operating condition.")
-
-    g1, g2, g3 = st.columns(3)
-    with g1:
-        render_gauge("VOLTAGE", latest["voltage_kv"], 12, "kV", minimum=8)
-    with g2:
-        render_gauge("CURRENT", latest["current_a"], 500, "A")
-    with g3:
-        render_gauge("FREQUENCY", latest["frequency_hz"], 55, "Hz", minimum=45)
-
-    g4, g5, g6 = st.columns(3)
-    with g4:
-        render_gauge("POWER", latest["power_mw"], 12, "MW")
-    with g5:
-        render_gauge("GRID LOAD", latest["load_percent"], 130, "%")
-    with g6:
-        render_gauge("TRANSFORMER TEMP", latest["transformer_temp_c"], 110, "°C")
-
-    # ELECTRICAL AI ANOMALY DETECTION SECTION
-
-    st.subheader("🤖 ELECTRICAL AI ANOMALY DETECTION (RANDOM FOREST)")
-
-    ai_cond = latest["ai_condition"]
-    ai_conf = latest["ai_confidence"]
-    ai_exp = latest["ai_explanation"]
-
-    if ai_cond == "MODEL_UNAVAILABLE":
-        ai_status_label = "OFFLINE"
-    elif latest["ai_abnormal"]:
-        ai_status_label = "CRITICAL"
-    elif latest["abnormal"]:
-        ai_status_label = "WARNING"
-    else:
-        ai_status_label = "NORMAL"
-
-    m1, m2, m3 = st.columns(3)
-    m1.metric("AI Predicted Condition", ai_cond)
-    m2.metric("Prediction Confidence", f"{ai_conf:.1f} %")
-    m3.metric("Electrical AI Status", ai_status_label)
-
-    if latest["ai_abnormal"]:
-        st.error(f"⚠️ Electrical AI Diagnosis: {ai_exp}")
-    elif ai_cond == "MODEL_UNAVAILABLE":
-        st.warning(ai_exp)
-    else:
-        st.success(f"✅ Electrical AI Diagnosis: {ai_exp}")
-
-    if latest["rule_alerts"]:
-        st.warning(
-            "Telemetry Rule Checks: " + ", ".join(latest["rule_alerts"])
-        )
-
-    # SIMULATED AUTOMATED PROTECTION
-
-    st.subheader("🛡️ SIMULATED AUTOMATED PROTECTION")
-
-    p1, p2, p3 = st.columns(3)
-
-    if abnormal:
-        p1.error("RELAY: TRIGGERED (SIMULATED)")
-        p2.error("BREAKER: OPEN (SIMULATED)")
-        p3.warning("GRID: ISOLATED (SIMULATED)")
-    else:
-        p1.success("RELAY: NORMAL")
-        p2.success("BREAKER: CLOSED")
-        p3.success("GRID: CONNECTED")
-
-    # HISTORY GRAPH
-
-    st.subheader("📈 ELECTRICAL PARAMETER HISTORY")
-
-    history = pd.DataFrame(st.session_state.history)
-
-    chart = history.set_index("time")[
-        ["voltage_kv", "frequency_hz", "load_percent"]
-    ]
-
-    st.line_chart(chart, height=280)
-
-    # SUMMARY
-
-    st.subheader("📊 GRID ANALYSIS SUMMARY")
-
-    a1, a2, a3 = st.columns(3)
-    a1.metric("Total Analyses", st.session_state.total_analyses)
-    a2.metric("Normal Readings", st.session_state.normal_count)
-    a3.metric("Abnormal Readings", st.session_state.abnormal_count)
-
-    # EVENT HISTORY + CSV EXPORT
-
-    st.subheader("🚨 ELECTRICAL & PROTECTION EVENT HISTORY")
-
-    if st.session_state.events:
-        events_df = pd.DataFrame(st.session_state.events)
-        st.dataframe(
-            events_df,
-            use_container_width=True,
-            hide_index=True
-        )
-        csv_data = events_df.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            label="📥 Download Grid Incident Report (CSV)",
-            data=csv_data,
-            file_name=f"gridshield_incident_report_{datetime.now().strftime('%H%M%S')}.csv",
-            mime="text/csv",
-            key="download_events_csv"
-        )
-    else:
-        st.info("No abnormal grid events recorded yet.")
-
-    st.caption(
-        "All electrical measurements and protection actions are synthetic simulation values."
-    )
-
-
-live_dashboard()
-
-
-# =====================================================
-# SEPARATE NETWORK SECURITY MODULE
-# =====================================================
-
-st.divider()
-
-st.header("🛡️ NETWORK SECURITY AI ANALYSIS")
-
-st.caption(
-    "Independent Random Forest network cybersecurity module (models/gridshield_model.pkl). "
-    "Analyses cyber traffic patterns separately from electrical grid telemetry."
-)
-
-if network_model is not None:
-
-    st.success("Network Security Random Forest Model Loaded & Independent")
-
-    # 1-CLICK DEMO PRESETS FOR HACKATHON DEMONSTRATION
-    st.markdown("**Quick Cyber Traffic Simulation Presets:**")
-    pr1, pr2, pr3 = st.columns(3)
-
-    if pr1.button("🟢 Load Normal Traffic Preset"):
-        st.session_state.net_packet_count = 100
-        st.session_state.net_traffic_volume = 5000
-        st.session_state.net_connection_rate = 20
-        st.session_state.net_port_number = 80
-        st.rerun()
-
-    if pr2.button("🔴 Load DoS Attack Preset"):
-        st.session_state.net_packet_count = 5000
-        st.session_state.net_traffic_volume = 90000
-        st.session_state.net_connection_rate = 250
-        st.session_state.net_port_number = 80
-        st.rerun()
-
-    if pr3.button("🟠 Load Unauthorized Access Preset"):
-        st.session_state.net_packet_count = 450
-        st.session_state.net_traffic_volume = 12000
-        st.session_state.net_connection_rate = 95
-        st.session_state.net_port_number = 22
-        st.rerun()
-
-    n1, n2, n3, n4 = st.columns(4)
-
-    with n1:
-        packet_count = st.number_input(
-            "Packet Count",
-            min_value=0,
-            key="net_packet_count"
-        )
-
-    with n2:
-        traffic_volume = st.number_input(
-            "Traffic Volume",
-            min_value=0,
-            key="net_traffic_volume"
-        )
-
-    with n3:
-        connection_rate = st.number_input(
-            "Connection Rate",
-            min_value=0,
-            key="net_connection_rate"
-        )
-
-    with n4:
-        port_number = st.number_input(
-            "Port Number",
-            min_value=0,
-            max_value=65535,
-            key="net_port_number"
-        )
-
-    if st.button("🔍 ANALYZE NETWORK TRAFFIC"):
-
-        data = pd.DataFrame([{
-            "packet_count": packet_count,
-            "traffic_volume": traffic_volume,
-            "connection_rate": connection_rate,
-            "port_number": port_number
-        }])
-
-        prediction = str(network_model.predict(data)[0])
-        st.session_state.last_network_status = prediction
-
-        st.subheader("NETWORK SECURITY AI RESULT")
-
-        if prediction == "Normal":
-            st.success("🟢 Normal Network Traffic Detected")
-        else:
-            st.error(
-                f"🚨 Cyber Threat Detected: {prediction}"
-            )
-
-else:
-    st.warning(
-        "Network model (models/gridshield_model.pkl) could not be loaded."
-    )
-
-
-# =====================================================
-# FOOTER
-# =====================================================
-
-st.divider()
-
-st.caption(
-    "GRIDSHIELD AI | Dual-AI Smart Grid Digital Twin | "
-    "Academic Prototype | Simulation Only"
-)
+    st.session_
