@@ -249,29 +249,37 @@ div[data-baseweb="popover"] [role="option"]:hover {
 """, unsafe_allow_html=True)
 
 # =====================================================
-# LOAD INDEPENDENT AI MODELS (CACHED)
+# LOAD INDEPENDENT AI MODELS (CLOUD-SAFE & CACHED)
 # =====================================================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 @st.cache_resource
 def load_electrical_ai_model():
-    model_path = os.path.join("models", "electrical_model.pkl")
-    if not os.path.exists(model_path):
+    try:
+        model_path = os.path.join(BASE_DIR, "models", "electrical_model.pkl")
+        if not os.path.exists(model_path):
+            return None
+        loaded = joblib.load(model_path)
+        if isinstance(loaded, dict) and "model" in loaded:
+            return loaded["model"]
+        return loaded
+    except Exception:
         return None
-    loaded = joblib.load(model_path)
-    if isinstance(loaded, dict) and "model" in loaded:
-        return loaded["model"]
-    return loaded
 
 
 @st.cache_resource
 def load_network_ai_model():
-    model_path = os.path.join("models", "gridshield_model.pkl")
-    if not os.path.exists(model_path):
+    try:
+        model_path = os.path.join(BASE_DIR, "models", "gridshield_model.pkl")
+        if not os.path.exists(model_path):
+            return None
+        loaded = joblib.load(model_path)
+        if isinstance(loaded, dict) and "model" in loaded:
+            return loaded["model"]
+        return loaded
+    except Exception:
         return None
-    loaded = joblib.load(model_path)
-    if isinstance(loaded, dict) and "model" in loaded:
-        return loaded["model"]
-    return loaded
 
 
 electrical_model = load_electrical_ai_model()
@@ -394,10 +402,7 @@ def generate_reading(scenario):
         "switching_event": switching
     }
 
-    # 1. Rule-based telemetry checks
     rule_alerts = detect_anomaly(reading)
-
-    # 2. Trained Electrical AI Random Forest prediction
     ai_condition, ai_confidence, ai_explanation = predict_electrical_condition(reading)
     ai_abnormal = ai_condition not in ("NORMAL", "MODEL_UNAVAILABLE")
 
@@ -708,10 +713,10 @@ if st.sidebar.button("🔄 RESET GRID"):
 
 
 # =====================================================
-# LIVE DASHBOARD
+# LIVE DASHBOARD (4s CLOUD-OPTIMIZED INTERVAL)
 # =====================================================
 
-@st.fragment(run_every="2s")
+@st.fragment(run_every="4s")
 def live_dashboard():
 
     if st.session_state.running:
